@@ -32,7 +32,7 @@
    <right>
       <AnchorPane prefHeight="400.0" prefWidth="325.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" layoutX="2.0" layoutY="45.0" prefHeight="17.0" prefWidth="321.0" text="Gestion des bibliothequaires" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+            <Label alignment="CENTER" layoutX="2.0" layoutY="45.0" prefHeight="17.0" prefWidth="321.0" text="Gestion des adherents" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

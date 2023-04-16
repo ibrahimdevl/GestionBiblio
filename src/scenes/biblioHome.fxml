@@ -13,7 +13,7 @@
    <top>
       <AnchorPane prefHeight="100.0" prefWidth="650.0" style="-fx-background-color: #263F73;" BorderPane.alignment="CENTER">
          <children>
-            <Label fx:id="welcomeLabel" layoutX="14.0" layoutY="27.0" text="Bienvenue Admin !" textFill="WHITE">
+            <Label fx:id="welcomeLabel" layoutX="14.0" layoutY="27.0" text="Bienvenue Biblio !" textFill="WHITE">
                <font>
                   <Font name="System Bold" size="32.0" />
                </font>
@@ -44,7 +44,7 @@
       <AnchorPane prefHeight="400.0" prefWidth="325.0" BorderPane.alignment="CENTER">
          <children>
             <Line endX="-99.0" endY="327.0" layoutX="425.0" layoutY="74.0" startX="-100.0" startY="-74.0" />
-            <Label alignment="CENTER" layoutY="44.0" prefHeight="27.0" prefWidth="324.0" text="Gestion des bibliothequaires" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+            <Label alignment="CENTER" layoutY="44.0" prefHeight="27.0" prefWidth="324.0" text="Gestion des adherents" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>

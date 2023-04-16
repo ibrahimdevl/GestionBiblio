@@ -3,6 +3,7 @@ package models;
 import java.util.Date;
 
 public class Emprunt {
+	private int idEmprunt;
 	private Date dateEmprunt;
 	private Date dateRetour;
 	private Adherent adherent;
@@ -12,7 +13,8 @@ public class Emprunt {
 
 	public Emprunt() {}
 
-	public Emprunt(Date dateEmprunt, Date dateRetour, Adherent adherent, Bibliothecaire bibliothecaire, Document document, boolean retournee) {
+	public Emprunt(int idEmprunt, Date dateEmprunt, Date dateRetour, Adherent adherent, Bibliothecaire bibliothecaire, Document document, boolean retournee) {
+		this.idEmprunt = idEmprunt;
 		this.dateEmprunt = dateEmprunt;
 		this.dateRetour = dateRetour;
 		this.adherent = adherent;
@@ -24,10 +26,13 @@ public class Emprunt {
 	@Override
 	public String toString() {
 		return "Emprunt{" +
-				"dateEmprunt=" + dateEmprunt +
+				"idEmprunt=" + idEmprunt +
+				", dateEmprunt=" + dateEmprunt +
 				", dateRetour=" + dateRetour +
 				", adherent=" + adherent +
 				", bibliothecaire=" + bibliothecaire +
+				", document=" + document +
+				", retournee=" + retournee +
 				'}';
 	}
 
@@ -77,5 +82,13 @@ public class Emprunt {
 
 	public void setRetournee(boolean retournee) {
 		this.retournee = retournee;
+	}
+
+	public int getIdEmprunt() {
+		return idEmprunt;
+	}
+
+	public void setIdEmprunt(int idEmprunt) {
+		this.idEmprunt = idEmprunt;
 	}
 }

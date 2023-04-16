@@ -20,6 +20,7 @@ public class AdminHomeController implements ControllerMethods {
     private Scene scene;
     protected Utilisateur utilisateur;
 
+    //go back to login page
     public void redirectLogin(ActionEvent e) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/scenes/login.fxml"));
         stage = (Stage)((Node)e.getSource()).getScene().getWindow();
@@ -31,6 +32,7 @@ public class AdminHomeController implements ControllerMethods {
         stage.show();
     }
 
+    //custom welcome message
     public void displayName(String nom, String prenom){
         welcomeLabel.setText("Bienvenue "+nom+" "+prenom+"!");
     }

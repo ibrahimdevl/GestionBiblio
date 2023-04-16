@@ -1,7 +1,6 @@
 package controllers;
 
 import databaseConnection.DatabaseConnection;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -34,6 +33,7 @@ public class LoginController implements ControllerMethods {
     private Stage stage;
     private Scene scene;
 
+    //pressing enter to login just like the button
     @FXML
     public void click(KeyEvent e) {
 
@@ -42,14 +42,16 @@ public class LoginController implements ControllerMethods {
         }
     }
 
+    //closing the app when clicking the button
     @FXML
-    protected void onCancelButtonAction(ActionEvent e) {
+    protected void onCancelButtonAction() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
 
+    //check if fields are empty otherwise login
     @FXML
-    protected void onLoginButtonClick(ActionEvent e) {
+    protected void onLoginButtonClick() {
         if (!usernameTextField.getText().isBlank() && !passwordPasswordField.getText().isBlank()) {
             validateLogin();
         } else {
@@ -67,9 +69,10 @@ public class LoginController implements ControllerMethods {
         try {
             Statement statement = connectDB.createStatement();
             ResultSet queryResult = statement.executeQuery(verifyLogin);
-
+            //check if credentials are valid
             if (queryResult.next()) {
                 if (queryResult.getInt(1) == 1) {
+                    //save user info into an object
                     String adminInfo = "SELECT * FROM `utilisateur` WHERE `nomUtlstr`='" + usernameTextField.getText() + "' AND `motDePasse`='" + passwordPasswordField.getText() + "';";
                     ResultSet adminInfoResult = statement.executeQuery(adminInfo);
                     Utilisateur user = new Utilisateur();
@@ -93,6 +96,7 @@ public class LoginController implements ControllerMethods {
         }
     }
 
+    //go to the adminHome page after login
     public void redirectAdminHome(Utilisateur user) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scenes/adminHome.fxml"));
 

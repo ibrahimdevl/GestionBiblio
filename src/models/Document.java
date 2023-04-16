@@ -66,7 +66,12 @@ public class Document {
 	public static void setNbDispo(int nbDispo) {
 		Document.nbDispo = nbDispo;
 	}
-	
-	
-	
+
+	public String getReference() {
+		return reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
+	}
 }

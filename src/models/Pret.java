@@ -3,6 +3,7 @@ package models;
 import java.util.Date;
 
 public class Pret {
+    private int idPret;
     private Document document;
     private Adherent adherent;
     private Date datePret;
@@ -10,7 +11,8 @@ public class Pret {
 
     public Pret() {}
 
-    public Pret(Document document, Adherent adherent, Date datePret, boolean validee) {
+    public Pret(int idPret, Document document, Adherent adherent, Date datePret, boolean validee) {
+        this.idPret = idPret;
         this.document = document;
         this.adherent = adherent;
         this.datePret = datePret;
@@ -20,7 +22,8 @@ public class Pret {
     @Override
     public String toString() {
         return "Pret{" +
-                "document=" + document +
+                "idPret=" + idPret +
+                ", document=" + document +
                 ", adherent=" + adherent +
                 ", datePret=" + datePret +
                 ", validee=" + validee +
@@ -57,5 +60,13 @@ public class Pret {
 
     public void setValidee(boolean validee) {
         this.validee = validee;
+    }
+
+    public int getIdPret() {
+        return idPret;
+    }
+
+    public void setIdPret(int idPret) {
+        this.idPret = idPret;
     }
 }
