@@ -11,6 +11,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import models.Adherent;
+import models.Admin;
+import models.Bibliothecaire;
 import models.Utilisateur;
 
 import java.io.IOException;
@@ -33,7 +36,7 @@ public class LoginController implements ControllerMethods {
     private Stage stage;
     private Scene scene;
 
-    //pressing enter to login just like the button
+    //pressing enter to log in just like the button
     @FXML
     public void click(KeyEvent e) {
 
@@ -57,36 +60,57 @@ public class LoginController implements ControllerMethods {
         } else {
             loginMessageLabel.setText("Veuillez remplir tous les champs!");
         }
-
     }
 
     public void validateLogin() {
         DatabaseConnection connect = new DatabaseConnection();
         Connection connectDB = connect.getConnection();
-
-        String verifyLogin = "SELECT COUNT(1) FROM `utilisateur` WHERE `nomUtlstr`='" + usernameTextField.getText() + "' AND `motDePasse`='" + passwordPasswordField.getText() + "';";
-
+        String username = usernameTextField.getText();
+        String password = passwordPasswordField.getText();
+        String verifyLogin = "SELECT COUNT(1) FROM `utilisateur` WHERE `nomUtlstr`='" + username + "' AND `motDePasse`='" + password + "';";
         try {
             Statement statement = connectDB.createStatement();
-            ResultSet queryResult = statement.executeQuery(verifyLogin);
+            ResultSet loginResult = statement.executeQuery(verifyLogin);
             //check if credentials are valid
-            if (queryResult.next()) {
-                if (queryResult.getInt(1) == 1) {
+            if (loginResult.next()) {
+                if (loginResult.getInt(1) == 1) {
                     //save user info into an object
-                    String adminInfo = "SELECT * FROM `utilisateur` WHERE `nomUtlstr`='" + usernameTextField.getText() + "' AND `motDePasse`='" + passwordPasswordField.getText() + "';";
-                    ResultSet adminInfoResult = statement.executeQuery(adminInfo);
-                    Utilisateur user = new Utilisateur();
-                    if (adminInfoResult.next()) {
-                        user.setIdUtlstr(adminInfoResult.getInt(1));
-                        user.setNomUtlstr(adminInfoResult.getString(2));
-                        user.setMotDePasse(adminInfoResult.getString(3));
-                        user.setNom(adminInfoResult.getString(4));
-                        user.setPrenom(adminInfoResult.getString(5));
-                        user.setAddress(adminInfoResult.getString(6));
-                        user.setNumTel(adminInfoResult.getInt(7));
+                    String checkUserType = "SELECT CASE WHEN a.idUtlstr IS NOT NULL THEN 'admin' WHEN b.idUtlstr IS NOT NULL THEN 'bibliothecaire' WHEN ad.idUtlstr IS NOT NULL THEN 'adherent' ELSE 'utilisateur' END AS `table` FROM utilisateur u LEFT JOIN admin a ON u.idUtlstr = a.idUtlstr LEFT JOIN bibliothecaire b ON u.idUtlstr = b.idUtlstr LEFT JOIN adherent ad ON u.idUtlstr = ad.idUtlstr WHERE u.nomUtlstr = '" + username + "' AND u.motDePasse = '" + password + "' AND (a.idUtlstr IS NOT NULL OR b.idUtlstr IS NOT NULL OR ad.idUtlstr IS NOT NULL);";
+                    ResultSet userTypeResult = statement.executeQuery(checkUserType);
+                    if (userTypeResult.next()) {
+                        if (userTypeResult.getString(1).equals("admin")) {
+                            Admin admin = new Admin();
+                            String adminInfo = "SELECT utilisateur.* , admin.departement , admin.email FROM `utilisateur`, `admin`WHERE utilisateur.idUtlstr=admin.idUtlstr AND utilisateur.nomUtlstr = '" + username + "' AND utilisateur.motDePasse='" + password + "';";
+                            ResultSet adminInfoResult = statement.executeQuery(adminInfo);
+                            if (adminInfoResult.next()) {
+                                admin.createUserInstance(adminInfoResult);
+                                admin.setDepartement(adminInfoResult.getString(8));
+                                admin.setEmail(adminInfoResult.getString(9));
+                                redirectAdminHome(admin);
+                            }
+                        } else if (userTypeResult.getString(1).equals("bibliothecaire")) {
+                            Bibliothecaire bibliothecaire = new Bibliothecaire();
+                            String biblioInfo = "SELECT utilisateur.* , bibliothecaire.dateEmbauche , bibliothecaire.salaire FROM `utilisateur`, `bibliothecaire` WHERE utilisateur.idUtlstr=bibliothecaire.idUtlstr AND utilisateur.nomUtlstr ='" + username + "' AND utilisateur.motDePasse='" + password + "';";
+                            ResultSet biblioInfoResult = statement.executeQuery(biblioInfo);
+                            if (biblioInfoResult.next()) {
+                                bibliothecaire.createUserInstance(biblioInfoResult);
+                                bibliothecaire.setDateEmbauche(biblioInfoResult.getDate(8));
+                                bibliothecaire.setSalaire(biblioInfoResult.getFloat(9));
+                                redirectBibliothecaireHome(bibliothecaire);
+                            }
+                        } else if (userTypeResult.getString(1).equals("adherent")) {
+                            Adherent adherent = new Adherent();
+                            String adherentInfo = "SELECT utilisateur.* , adherent.cin , adherent.dateInscription FROM `utilisateur`, `adherent` WHERE utilisateur.idUtlstr=adherent.idUtlstr AND utilisateur.nomUtlstr = '" + username + "' AND utilisateur.motDePasse='" + password + "';";
+                            ResultSet adherentInfoResult = statement.executeQuery(adherentInfo);
+                            if (adherentInfoResult.next()) {
+                                adherent.createAdherentInstance(adherentInfoResult);
+                                redirectAdherentHome(adherent);
+                            }
+                        } else {
+                            loginMessageLabel.setText("Connexion invalide. Veuillez réessayer!");
+                        }
                     }
-                    redirectAdminHome(user);
-
+                    Utilisateur user = new Utilisateur();
                 } else {
                     loginMessageLabel.setText("Connexion invalide. Veuillez réessayer!");
                 }
@@ -101,7 +125,7 @@ public class LoginController implements ControllerMethods {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scenes/adminHome.fxml"));
 
         stage = (Stage) loginButton.getScene().getWindow();
-        scene = new Scene(fxmlLoader.load(), 650, 500);
+        scene = new Scene(fxmlLoader.load(), 800, 500);
 
         AdminHomeController adminHomeController = fxmlLoader.getController();
         adminHomeController.utilisateur = user;
@@ -113,5 +137,37 @@ public class LoginController implements ControllerMethods {
         stage.show();
     }
 
+    //go to the biblioHome page after login
+    public void redirectBibliothecaireHome(Bibliothecaire bibliothecaire) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scenes/biblioHome.fxml"));
 
+        stage = (Stage) loginButton.getScene().getWindow();
+        scene = new Scene(fxmlLoader.load(), 800, 500);
+
+        BiblioHomeController biblioHomeController = fxmlLoader.getController();
+        biblioHomeController.bibliothecaire = bibliothecaire;
+        biblioHomeController.displayName(bibliothecaire.getNom(), bibliothecaire.getPrenom());
+
+        centerScene(stage, scene);
+
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    //go to the adherentHome page after login
+    public void redirectAdherentHome(Adherent adherent) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scenes/adherentHome.fxml"));
+
+        stage = (Stage) loginButton.getScene().getWindow();
+        scene = new Scene(fxmlLoader.load(), 800, 500);
+
+        AdherentHomeController adherentHomeController = fxmlLoader.getController();
+        adherentHomeController.adherent = adherent;
+        adherentHomeController.displayName(adherent.getNom(), adherent.getPrenom());
+
+        centerScene(stage, scene);
+
+        stage.setScene(scene);
+        stage.show();
+    }
 }

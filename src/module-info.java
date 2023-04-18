@@ -6,4 +6,5 @@ module GestionBiblio {
 
     opens application;
     opens controllers;
+    opens models to javafx.base;
 }

@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public interface ControllerMethods {
     //Method to center the window in the middle of the screen
-    public default void centerScene(Stage stage,Scene scene) {
+    default void centerScene(Stage stage,Scene scene) {
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         double sceneWidth = scene.getWidth();
         double sceneHeight = scene.getHeight();
@@ -17,4 +17,5 @@ public interface ControllerMethods {
         stage.setX(x);
         stage.setY(y);
     }
+
 }

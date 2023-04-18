@@ -13,14 +13,10 @@ CREATE TABLE `libraryproject`.`utilisateur`
     ENGINE = InnoDB;
 
 INSERT INTO `utilisateur` (`nomUtlstr`, `motDePasse`, `nom`, `prenom`, `addresse`, `tel`)
-VALUES ('Hlel', 'Test1234', 'Mohamed Aziz', 'Hlel', 'Raoued', '54385290');
-INSERT INTO `utilisateur` (`nomUtlstr`, `motDePasse`, `nom`, `prenom`, `addresse`, `tel`)
-VALUES ('Kammoun', 'mdp1234', 'Hale', 'Kammoun', 'Ghazela', '52789456');
-INSERT INTO `utilisateur` (`nomUtlstr`, `motDePasse`, `nom`, `prenom`, `addresse`, `tel`)
-VALUES ('Nour', 'mdp0000', 'Nour', 'Barrani', 'Tunis', '24567891');
-INSERT INTO `utilisateur` (`nomUtlstr`, `motDePasse`, `nom`, `prenom`, `addresse`, `tel`)
-VALUES ('Mootez', 'Test0000', 'Mootez', 'Bani', 'Nabeul', '98456123');
-
+VALUES ('Hlel', 'Test1234', 'Mohamed Aziz', 'Hlel', 'Raoued', '54385290'),
+       ('Kammoun', 'mdp1234', 'Hale', 'Kammoun', 'Ghazela', '52789456'),
+       ('Nour', 'mdp0000', 'Nour', 'Barrani', 'Tunis', '24567891'),
+       ('Mootez', 'Test0000', 'Mootez', 'Bani', 'Nabeul', '98456123');
 
 CREATE TABLE `libraryproject`.`admin`
 (
@@ -28,7 +24,7 @@ CREATE TABLE `libraryproject`.`admin`
     `departement` VARCHAR(50)     NULL COMMENT 'Departement',
     `email`       VARCHAR(255)    NULL COMMENT 'Email',
     PRIMARY KEY (`idUtlstr`),
-    FOREIGN KEY (`idUtlstr`) REFERENCES utilisateur (`idUtlstr`)
+    FOREIGN KEY (`idUtlstr`) REFERENCES utilisateur (`idUtlstr`) ON DELETE CASCADE ON UPDATE CASCADE
 )
     ENGINE = InnoDB;
 
@@ -41,7 +37,7 @@ CREATE TABLE `libraryproject`.`bibliothecaire`
     `dateEmbauche` DATE            NULL COMMENT 'Date de l embauche',
     `salaire`      FLOAT           NULL COMMENT 'Salaire',
     PRIMARY KEY (`idUtlstr`),
-    FOREIGN KEY (`idUtlstr`) REFERENCES utilisateur (`idUtlstr`)
+    FOREIGN KEY (`idUtlstr`) REFERENCES utilisateur (`idUtlstr`) ON DELETE CASCADE ON UPDATE CASCADE
 )
     ENGINE = InnoDB;
 
@@ -54,7 +50,7 @@ CREATE TABLE `libraryproject`.`adherent`
     `cin`             INT(8)          NOT NULL COMMENT 'Numero de carte d identite',
     `dateInscription` DATE            NULL COMMENT 'Date de inscription',
     PRIMARY KEY (`idUtlstr`),
-    FOREIGN KEY (`idUtlstr`) REFERENCES utilisateur (`idUtlstr`)
+    FOREIGN KEY (`idUtlstr`) REFERENCES utilisateur (`idUtlstr`) ON DELETE CASCADE ON UPDATE CASCADE
 )
     ENGINE = InnoDB;
 
@@ -82,8 +78,8 @@ CREATE TABLE `libraryproject`.`pret`
     `datePret` DATE            NOT NULL COMMENT 'Date de pret',
     `validee`  BOOLEAN         NOT NULL COMMENT 'Est ce que validee par bibliothecaire',
     PRIMARY KEY (`idPret`),
-    FOREIGN KEY (`idAdh`) REFERENCES adherent (`idUtlstr`),
-    FOREIGN KEY (`idDoc`) REFERENCES document (`idDoc`)
+    FOREIGN KEY (`idAdh`) REFERENCES adherent (`idUtlstr`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`idDoc`) REFERENCES document (`idDoc`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 INSERT INTO `pret` (`idDoc`, `idAdh`, `datePret`, `validee`)
@@ -100,10 +96,9 @@ CREATE TABLE `libraryproject`.`emprunt`
     `retourne`    BOOLEAN         NOT NULL COMMENT 'Est ce le document est retourne',
     PRIMARY KEY (`idEmprunt`),
     FOREIGN KEY (`idAdh`) REFERENCES adherent (`idUtlstr`),
-    FOREIGN KEY (`idBiblio`) REFERENCES bibliothecaire (`idUtlstr`),
-    FOREIGN KEY (`idDoc`) REFERENCES document (`idDoc`)
+    FOREIGN KEY (`idBiblio`) REFERENCES bibliothecaire (`idUtlstr`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`idDoc`) REFERENCES document (`idDoc`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
 
 INSERT INTO `emprunt` (`dateEmprunt`, `dateRetour`, `idAdh`, `idBiblio`, `idDoc`, `retourne`)
 VALUES ('2023-04-02', '2023-04-23', '3', '2', '1', '0');
-

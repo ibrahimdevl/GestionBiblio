@@ -1,5 +1,7 @@
 package models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class Bibliothecaire extends Utilisateur{
@@ -37,6 +39,18 @@ public class Bibliothecaire extends Utilisateur{
 
 	public void setSalaire(float salaire) {
 		this.salaire = salaire;
+	}
+
+	public void createBibliothecaireInstance(ResultSet adherentInfoResult) throws SQLException {
+		createUserInstance(adherentInfoResult);
+		setDateEmbauche(adherentInfoResult.getDate(8));
+		setSalaire(adherentInfoResult.getFloat(9));
+	}
+
+	public boolean matchesSearch(String searchString) {
+		return getNom().contains(searchString) ||
+				getPrenom().contains(searchString) ||
+				String.valueOf(getDateEmbauche()).contains(searchString);
 	}
 
 

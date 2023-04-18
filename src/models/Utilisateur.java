@@ -1,5 +1,11 @@
 package models;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import databaseConnection.DatabaseConnection;
+
 public class Utilisateur {
     private int idUtlstr;
     private String nomUtlstr;
@@ -21,6 +27,16 @@ public class Utilisateur {
         this.numTel = numTel;
     }
 
+    public Utilisateur(int idUtlstr, String nomUtlstr, String motDePasse, String nom, String prenom, String address, int numTel) {
+        this.idUtlstr = idUtlstr;
+        this.nomUtlstr = nomUtlstr;
+        this.motDePasse = motDePasse;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.address = address;
+        this.numTel = numTel;
+    }
+
     @Override
     public String toString() {
         return  "idUtlstr=" + idUtlstr +
@@ -33,7 +49,7 @@ public class Utilisateur {
     }
 
     public void afficher(){
-        System.out.println(toString());
+        System.out.println(this);
     }
     public int getIdUtlstr() {
         return idUtlstr;
@@ -76,5 +92,31 @@ public class Utilisateur {
     }
     public void setNumTel(int numTel) {
         this.numTel = numTel;
+    }
+
+    public void createUserInstance(ResultSet userInfoResult) throws SQLException {
+        setIdUtlstr(userInfoResult.getInt(1));
+        setNomUtlstr(userInfoResult.getString(2));
+        setMotDePasse(userInfoResult.getString(3));
+        setNom(userInfoResult.getString(4));
+        setPrenom(userInfoResult.getString(5));
+        setAddress(userInfoResult.getString(6));
+        setNumTel(userInfoResult.getInt(7));
+    }
+
+    public void addUtilisateur() {
+        String sql = "INSERT INTO utilisateur (nomUtlstr, motDePasse, nom, prenom, addresse, tel) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = new DatabaseConnection().getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, getNomUtlstr());
+            pstmt.setString(2, getMotDePasse());
+            pstmt.setString(3, getNom());
+            pstmt.setString(4, getPrenom());
+            pstmt.setString(5, getAddress());
+            pstmt.setInt(6, getNumTel());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
