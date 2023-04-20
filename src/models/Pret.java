@@ -1,20 +1,25 @@
 package models;
 
+import databaseConnection.DatabaseConnection;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class Pret {
     private int idPret;
-    private Document document;
-    private Adherent adherent;
+    private int idDocument;
+    private int idAdherent;
     private Date datePret;
     private boolean validee;
 
     public Pret() {}
 
-    public Pret(int idPret, Document document, Adherent adherent, Date datePret, boolean validee) {
+    public Pret(int idPret, int idDocument, int idAdherent, Date datePret, boolean validee) {
         this.idPret = idPret;
-        this.document = document;
-        this.adherent = adherent;
+        this.idDocument = idDocument;
+        this.idAdherent = idAdherent;
         this.datePret = datePret;
         this.validee = validee;
     }
@@ -23,27 +28,27 @@ public class Pret {
     public String toString() {
         return "Pret{" +
                 "idPret=" + idPret +
-                ", document=" + document +
-                ", adherent=" + adherent +
+                ", document=" + idDocument +
+                ", adherent=" + idAdherent +
                 ", datePret=" + datePret +
                 ", validee=" + validee +
                 '}';
     }
 
-    public Document getDocument() {
-        return document;
+    public int getIdDocument() {
+        return idDocument;
     }
 
-    public void setDocument(Document document) {
-        this.document = document;
+    public void setIdDocument(int idDocument) {
+        this.idDocument = idDocument;
     }
 
-    public Adherent getAdherent() {
-        return adherent;
+    public int getIdAdherent() {
+        return idAdherent;
     }
 
-    public void setAdherent(Adherent adherent) {
-        this.adherent = adherent;
+    public void setIdAdherent(int idAdherent) {
+        this.idAdherent = idAdherent;
     }
 
     public Date getDatePret() {
@@ -68,5 +73,13 @@ public class Pret {
 
     public void setIdPret(int idPret) {
         this.idPret = idPret;
+    }
+
+    public void createPretInstance(ResultSet PretInfoResult) throws SQLException {
+        setIdPret(PretInfoResult.getInt(1));
+        setIdDocument(PretInfoResult.getInt(2));
+        setIdAdherent(PretInfoResult.getInt(3));
+        setDatePret(PretInfoResult.getDate(4));
+        setValidee(false);
     }
 }

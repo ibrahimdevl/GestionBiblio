@@ -1,5 +1,8 @@
 package models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Admin extends Utilisateur{
     private String departement;
     private String email;
@@ -35,5 +38,11 @@ public class Admin extends Utilisateur{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void createAdminInstance(ResultSet adherentInfoResult) throws SQLException {
+        createUserInstance(adherentInfoResult);
+        setDepartement(adherentInfoResult.getString(8));
+        setEmail(adherentInfoResult.getString(9));
     }
 }

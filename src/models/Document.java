@@ -5,16 +5,19 @@ public class Document {
 	private String reference;
 	private String titre;
 	private String auteur;
-	private static int nbCopies = 0;
-	private static int nbDispo = 0;
 
 	public Document() {}
 
 	public Document(String titre, String auteur) {
 		this.titre = titre;
 		this.auteur = auteur;
-		nbCopies++;
-		nbDispo++;
+	}
+
+	public Document(int idDoc, String reference, String titre, String auteur) {
+		this.idDoc = idDoc;
+		this.reference = reference;
+		this.titre = titre;
+		this.auteur = auteur;
 	}
 
 	@Override
@@ -51,21 +54,6 @@ public class Document {
 		this.auteur = auteur;
 	}
 
-	public static int getNbCopies() {
-		return nbCopies;
-	}
-
-	public static void setNbCopies(int nbCopies) {
-		Document.nbCopies = nbCopies;
-	}
-
-	public static int getNbDispo() {
-		return nbDispo;
-	}
-
-	public static void setNbDispo(int nbDispo) {
-		Document.nbDispo = nbDispo;
-	}
 
 	public String getReference() {
 		return reference;
@@ -73,5 +61,10 @@ public class Document {
 
 	public void setReference(String reference) {
 		this.reference = reference;
+	}
+
+	public boolean matchesSearch(String searchString) {
+		return getTitre().contains(searchString) ||
+				getAuteur().contains(searchString);
 	}
 }

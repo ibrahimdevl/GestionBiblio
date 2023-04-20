@@ -48,9 +48,6 @@ public class Utilisateur {
                 ", numTel=" + numTel ;
     }
 
-    public void afficher(){
-        System.out.println(this);
-    }
     public int getIdUtlstr() {
         return idUtlstr;
     }
@@ -104,19 +101,5 @@ public class Utilisateur {
         setNumTel(userInfoResult.getInt(7));
     }
 
-    public void addUtilisateur() {
-        String sql = "INSERT INTO utilisateur (nomUtlstr, motDePasse, nom, prenom, addresse, tel) VALUES (?, ?, ?, ?, ?, ?)";
-        try (Connection conn = new DatabaseConnection().getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, getNomUtlstr());
-            pstmt.setString(2, getMotDePasse());
-            pstmt.setString(3, getNom());
-            pstmt.setString(4, getPrenom());
-            pstmt.setString(5, getAddress());
-            pstmt.setInt(6, getNumTel());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
 }

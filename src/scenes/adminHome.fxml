@@ -68,9 +68,10 @@
                      <Button onAction="#adherentDeleteSelectedRow" text="Supprimer adherent" />
                   </HBox>
                   <Button mnemonicParsing="false" onAction="#adherentAdd" text="Ajouter Adherent" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                  <Button mnemonicParsing="false" onAction="#refreshAdherentTable" text="Actualiser" GridPane.rowIndex="4" />
                </children>
             </GridPane>
-            <Label alignment="CENTER" layoutY="26.0" prefHeight="17.0" prefWidth="321.0" text="Gestion des adherents" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="26.0">
+            <Label alignment="CENTER" layoutY="26.0" prefHeight="17.0" prefWidth="321.0" text="Gestion des adherents" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -79,9 +80,9 @@
       </AnchorPane>
    </right>
    <left>
-      <AnchorPane maxWidth="400.0" prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" layoutY="30.0" prefHeight="27.0" prefWidth="324.0" text="Gestion des bibliothequaires" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="26.0">
+            <Label alignment="CENTER" layoutY="30.0" prefHeight="27.0" prefWidth="324.0" text="Gestion des bibliothequaires" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font>
@@ -117,6 +118,7 @@
                      </children>
                   </HBox>
                   <Button mnemonicParsing="false" onAction="#biblioAdd" text="Ajouter Bibliothecaire" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                  <Button mnemonicParsing="false" onAction="#refreshBibliothecaireTable" text="Actualiser" GridPane.rowIndex="4" />
                </children>
             </GridPane>
          </children>

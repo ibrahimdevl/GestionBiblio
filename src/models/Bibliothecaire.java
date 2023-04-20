@@ -2,7 +2,7 @@ package models;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Date;
 
 public class Bibliothecaire extends Utilisateur{
 	private Date dateEmbauche;

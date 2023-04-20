@@ -1,25 +1,26 @@
 package models;
 
+import java.sql.ResultSet;
 import java.util.Date;
 
 public class Emprunt {
 	private int idEmprunt;
 	private Date dateEmprunt;
 	private Date dateRetour;
-	private Adherent adherent;
-	private Bibliothecaire bibliothecaire;
-	private Document document;
+	private int idAdherent;
+	private int idBibliothecaire;
+	private int idDocument;
 	private boolean retournee;
 
 	public Emprunt() {}
 
-	public Emprunt(int idEmprunt, Date dateEmprunt, Date dateRetour, Adherent adherent, Bibliothecaire bibliothecaire, Document document, boolean retournee) {
+	public Emprunt(int idEmprunt, Date dateEmprunt, Date dateRetour, int idAdherent, int idBibliothecaire, int idDocument, boolean retournee) {
 		this.idEmprunt = idEmprunt;
 		this.dateEmprunt = dateEmprunt;
 		this.dateRetour = dateRetour;
-		this.adherent = adherent;
-		this.bibliothecaire = bibliothecaire;
-		this.document=document;
+		this.idAdherent = idAdherent;
+		this.idBibliothecaire = idBibliothecaire;
+		this.idDocument = idDocument;
 		this.retournee = retournee;
 	}
 
@@ -29,9 +30,9 @@ public class Emprunt {
 				"idEmprunt=" + idEmprunt +
 				", dateEmprunt=" + dateEmprunt +
 				", dateRetour=" + dateRetour +
-				", adherent=" + adherent +
-				", bibliothecaire=" + bibliothecaire +
-				", document=" + document +
+				", adherent=" + idAdherent +
+				", bibliothecaire=" + idBibliothecaire +
+				", document=" + idDocument +
 				", retournee=" + retournee +
 				'}';
 	}
@@ -52,28 +53,28 @@ public class Emprunt {
 		this.dateRetour = dateRetour;
 	}
 
-	public Adherent getAdherent() {
-		return adherent;
+	public int getIdAdherent() {
+		return idAdherent;
 	}
 
-	public void setAdherent(Adherent adherent) {
-		this.adherent = adherent;
+	public void setIdAdherent(int idAdherent) {
+		this.idAdherent = idAdherent;
 	}
 
-	public Bibliothecaire getBibliothecaire() {
-		return bibliothecaire;
+	public int getIdBibliothecaire() {
+		return idBibliothecaire;
 	}
 
-	public void setBibliothecaire(Bibliothecaire bibliothecaire) {
-		this.bibliothecaire = bibliothecaire;
+	public void setIdBibliothecaire(int idBibliothecaire) {
+		this.idBibliothecaire = idBibliothecaire;
 	}
 
-	public Document getDocument() {
-		return document;
+	public int getIdDocument() {
+		return idDocument;
 	}
 
-	public void setDocument(Document document) {
-		this.document = document;
+	public void setIdDocument(int idDocument) {
+		this.idDocument = idDocument;
 	}
 
 	public boolean isRetournee() {
@@ -90,5 +91,9 @@ public class Emprunt {
 
 	public void setIdEmprunt(int idEmprunt) {
 		this.idEmprunt = idEmprunt;
+	}
+
+	public void createEmpruntInstance(ResultSet resultSet) {
+
 	}
 }

@@ -83,9 +83,7 @@ public class LoginController implements ControllerMethods {
                             String adminInfo = "SELECT utilisateur.* , admin.departement , admin.email FROM `utilisateur`, `admin`WHERE utilisateur.idUtlstr=admin.idUtlstr AND utilisateur.nomUtlstr = '" + username + "' AND utilisateur.motDePasse='" + password + "';";
                             ResultSet adminInfoResult = statement.executeQuery(adminInfo);
                             if (adminInfoResult.next()) {
-                                admin.createUserInstance(adminInfoResult);
-                                admin.setDepartement(adminInfoResult.getString(8));
-                                admin.setEmail(adminInfoResult.getString(9));
+                                admin.createAdminInstance(adminInfoResult);
                                 redirectAdminHome(admin);
                             }
                         } else if (userTypeResult.getString(1).equals("bibliothecaire")) {
@@ -93,9 +91,7 @@ public class LoginController implements ControllerMethods {
                             String biblioInfo = "SELECT utilisateur.* , bibliothecaire.dateEmbauche , bibliothecaire.salaire FROM `utilisateur`, `bibliothecaire` WHERE utilisateur.idUtlstr=bibliothecaire.idUtlstr AND utilisateur.nomUtlstr ='" + username + "' AND utilisateur.motDePasse='" + password + "';";
                             ResultSet biblioInfoResult = statement.executeQuery(biblioInfo);
                             if (biblioInfoResult.next()) {
-                                bibliothecaire.createUserInstance(biblioInfoResult);
-                                bibliothecaire.setDateEmbauche(biblioInfoResult.getDate(8));
-                                bibliothecaire.setSalaire(biblioInfoResult.getFloat(9));
+                                bibliothecaire.createBibliothecaireInstance(biblioInfoResult);
                                 redirectBibliothecaireHome(bibliothecaire);
                             }
                         } else if (userTypeResult.getString(1).equals("adherent")) {
@@ -121,15 +117,15 @@ public class LoginController implements ControllerMethods {
     }
 
     //go to the adminHome page after login
-    public void redirectAdminHome(Utilisateur user) throws IOException {
+    public void redirectAdminHome(Admin admin) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scenes/adminHome.fxml"));
 
         stage = (Stage) loginButton.getScene().getWindow();
         scene = new Scene(fxmlLoader.load(), 800, 500);
 
         AdminHomeController adminHomeController = fxmlLoader.getController();
-        adminHomeController.utilisateur = user;
-        adminHomeController.displayName(user.getNom(), user.getPrenom());
+        adminHomeController.admin=admin;
+        adminHomeController.displayName(admin.getNom(), admin.getPrenom());
 
         centerScene(stage, scene);
 
@@ -145,7 +141,7 @@ public class LoginController implements ControllerMethods {
         scene = new Scene(fxmlLoader.load(), 800, 500);
 
         BiblioHomeController biblioHomeController = fxmlLoader.getController();
-        biblioHomeController.bibliothecaire = bibliothecaire;
+        biblioHomeController.bibliothecaire=bibliothecaire;
         biblioHomeController.displayName(bibliothecaire.getNom(), bibliothecaire.getPrenom());
 
         centerScene(stage, scene);

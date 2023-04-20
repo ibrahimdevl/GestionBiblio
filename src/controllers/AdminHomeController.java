@@ -16,31 +16,33 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import models.Adherent;
+import models.Admin;
 import models.Bibliothecaire;
-import models.Utilisateur;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.*;
-import java.util.Objects;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AdminHomeController implements ControllerMethods, Initializable {
 
-    protected Utilisateur utilisateur;
     DatabaseConnection connect = new DatabaseConnection();
     Connection connection = connect.getConnection();
     String query = null;
     PreparedStatement preparedStatement = null;
     ResultSet resultSet = null;
-    Adherent adherent = null;
-    Bibliothecaire bibliothecaire = null;
+    Admin admin;
+    Adherent adherent;
+    Bibliothecaire bibliothecaire;
 
 
     // Execute query and retrieve data
@@ -75,30 +77,8 @@ public class AdminHomeController implements ControllerMethods, Initializable {
         loadDate();
     }
 
-
     @FXML
-    private void close(MouseEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.close();
-    }
-
-    @FXML
-    private void getAddView(MouseEvent event) {
-        try {
-            Parent parent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/scenes/addAdherent.fxml")));
-            Scene scene = new Scene(parent);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.show();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
-    @FXML
-    private void refreshAdherentTable() {
+    public void refreshAdherentTable() {
         try {
             AdherentList.clear();
 
@@ -116,7 +96,7 @@ public class AdminHomeController implements ControllerMethods, Initializable {
 
 
         } catch (SQLException ex) {
-            Logger.getLogger(AdherentHomeController.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
 
@@ -141,10 +121,6 @@ public class AdminHomeController implements ControllerMethods, Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(AdherentHomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    @FXML
-    private void print(MouseEvent event) {
     }
 
     private void loadDate() {
@@ -181,7 +157,7 @@ public class AdminHomeController implements ControllerMethods, Initializable {
         }
     }
 
-    public void adherentEditSelectedRow(ActionEvent e) {
+    public void adherentEditSelectedRow() {
         adherent = adherentTableView.getSelectionModel().getSelectedItem();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/scenes/addAdherent.fxml"));
@@ -190,14 +166,7 @@ public class AdminHomeController implements ControllerMethods, Initializable {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        AddAdherentController addStudentController = loader.getController();
-        addStudentController.setUpdate(true);
-        addStudentController.setTextField(adherent.getIdUtlstr(), adherent.getNomUtlstr(),adherent.getMotDePasse(), adherent.getNom(), adherent.getPrenom(),adherent.getAddress(),adherent.getNumTel(),adherent.getCin(),adherent.getDateInscription());
-        Parent parent = loader.getRoot();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(parent));
-        stage.initStyle(StageStyle.UTILITY);
-        stage.show();
+        BiblioHomeController.redirectAdherentEdit(loader, adherent);
 
     }
 
@@ -229,7 +198,23 @@ public class AdminHomeController implements ControllerMethods, Initializable {
         }
     }
 
-    public void biblioEditSelectedRow(ActionEvent e) {
+    public void biblioEditSelectedRow() {
+        bibliothecaire = biblioTableView.getSelectionModel().getSelectedItem();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/scenes/addBibliothecaire.fxml"));
+        try {
+            loader.load();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        AddBibliothecaireController addBibliothecaireController = loader.getController();
+        addBibliothecaireController.setUpdate();
+        addBibliothecaireController.setTextField(bibliothecaire.getIdUtlstr(), bibliothecaire.getNomUtlstr(),bibliothecaire.getMotDePasse(), bibliothecaire.getNom(), bibliothecaire.getPrenom(),bibliothecaire.getAddress(),bibliothecaire.getNumTel(),bibliothecaire.getSalaire(),bibliothecaire.getDateEmbauche());
+        Parent parent = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(parent));
+        stage.initStyle(StageStyle.UTILITY);
+        stage.show();
     }
 
     public void biblioDeleteSelectedRow() {
@@ -239,7 +224,6 @@ public class AdminHomeController implements ControllerMethods, Initializable {
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.execute();
             refreshBibliothecaireTable();
-
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -263,7 +247,7 @@ public class AdminHomeController implements ControllerMethods, Initializable {
     }
 
 
-    public void adherentAdd(ActionEvent actionEvent) {
+    public void adherentAdd() {
         adherent = adherentTableView.getSelectionModel().getSelectedItem();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/scenes/addAdherent.fxml"));
@@ -279,6 +263,19 @@ public class AdminHomeController implements ControllerMethods, Initializable {
         stage.show();
     }
 
-    public void biblioAdd(ActionEvent actionEvent) {
+    public void biblioAdd() {
+        bibliothecaire = biblioTableView.getSelectionModel().getSelectedItem();
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/scenes/addBibliothecaire.fxml"));
+        try {
+            loader.load();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        Parent parent = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(parent));
+        stage.initStyle(StageStyle.UTILITY);
+        stage.show();
     }
 }
