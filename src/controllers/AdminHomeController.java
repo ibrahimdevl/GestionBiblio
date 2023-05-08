@@ -73,7 +73,6 @@ public class AdminHomeController implements ControllerMethods, Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
         loadDate();
     }
 

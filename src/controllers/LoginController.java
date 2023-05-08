@@ -22,6 +22,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class LoginController implements ControllerMethods {
+    //torbet fxml bel java
     @FXML
     private Button loginButton;
     @FXML
@@ -36,23 +37,22 @@ public class LoginController implements ControllerMethods {
     private Stage stage;
     private Scene scene;
 
-    //pressing enter to log in just like the button
+    //ki tenzel entree yenzel 3la bouton connecter
     @FXML
     public void click(KeyEvent e) {
-
         if (e.getCode() == KeyCode.ENTER) {
             loginButton.fire();
         }
     }
 
-    //closing the app when clicking the button
+    //bouton annuler tsaker el application
     @FXML
     protected void onCancelButtonAction() {
         Stage stage = (Stage) cancelButton.getScene().getWindow();
         stage.close();
     }
 
-    //check if fields are empty otherwise login
+    //ythabet fel les champs m3abin wala le
     @FXML
     protected void onLoginButtonClick() {
         if (!usernameTextField.getText().isBlank() && !passwordPasswordField.getText().isBlank()) {
@@ -62,28 +62,29 @@ public class LoginController implements ControllerMethods {
         }
     }
 
+    //ythabet chnowa naw3 el utilisateur
     public void validateLogin() {
         DatabaseConnection connect = new DatabaseConnection();
-        Connection connectDB = connect.getConnection();
+        Connection connectDB = connect.getConnection(); //yconnecty lel base donnée
         String username = usernameTextField.getText();
         String password = passwordPasswordField.getText();
-        String verifyLogin = "SELECT COUNT(1) FROM `utilisateur` WHERE `nomUtlstr`='" + username + "' AND `motDePasse`='" + password + "';";
+        String verifyLogin = "SELECT COUNT(1) FROM `utilisateur` WHERE `nomUtlstr`='" + username + "' AND `motDePasse`='" + password + "';";//requete bech tlawej 3al utilisateur mawjoud wala le
         try {
             Statement statement = connectDB.createStatement();
-            ResultSet loginResult = statement.executeQuery(verifyLogin);
+            ResultSet loginResult = statement.executeQuery(verifyLogin);//executer el requete
             //check if credentials are valid
             if (loginResult.next()) {
-                if (loginResult.getInt(1) == 1) {
+                if (loginResult.getInt(1) == 1) { //law ken utilisateur mawjoud
                     //save user info into an object
                     String checkUserType = "SELECT CASE WHEN a.idUtlstr IS NOT NULL THEN 'admin' WHEN b.idUtlstr IS NOT NULL THEN 'bibliothecaire' WHEN ad.idUtlstr IS NOT NULL THEN 'adherent' ELSE 'utilisateur' END AS `table` FROM utilisateur u LEFT JOIN admin a ON u.idUtlstr = a.idUtlstr LEFT JOIN bibliothecaire b ON u.idUtlstr = b.idUtlstr LEFT JOIN adherent ad ON u.idUtlstr = ad.idUtlstr WHERE u.nomUtlstr = '" + username + "' AND u.motDePasse = '" + password + "' AND (a.idUtlstr IS NOT NULL OR b.idUtlstr IS NOT NULL OR ad.idUtlstr IS NOT NULL);";
-                    ResultSet userTypeResult = statement.executeQuery(checkUserType);
+                    ResultSet userTypeResult = statement.executeQuery(checkUserType);//ya3ref chnowa naw3 el utilisateur
                     if (userTypeResult.next()) {
-                        if (userTypeResult.getString(1).equals("admin")) {
-                            Admin admin = new Admin();
+                        if (userTypeResult.getString(1).equals("admin")) {//law ken admin
+                            Admin admin = new Admin();//thez les donnees mel base lel variable
                             String adminInfo = "SELECT utilisateur.* , admin.departement , admin.email FROM `utilisateur`, `admin`WHERE utilisateur.idUtlstr=admin.idUtlstr AND utilisateur.nomUtlstr = '" + username + "' AND utilisateur.motDePasse='" + password + "';";
                             ResultSet adminInfoResult = statement.executeQuery(adminInfo);
                             if (adminInfoResult.next()) {
-                                admin.createAdminInstance(adminInfoResult);
+                                admin.createAdminInstance(adminInfoResult);//nasn3ou variable admin fih les info
                                 redirectAdminHome(admin);
                             }
                         } else if (userTypeResult.getString(1).equals("bibliothecaire")) {
@@ -116,7 +117,7 @@ public class LoginController implements ControllerMethods {
         }
     }
 
-    //go to the adminHome page after login
+    //thezek lel page admin
     public void redirectAdminHome(Admin admin) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scenes/adminHome.fxml"));
 
@@ -133,7 +134,7 @@ public class LoginController implements ControllerMethods {
         stage.show();
     }
 
-    //go to the biblioHome page after login
+    //thezek lel page biblio
     public void redirectBibliothecaireHome(Bibliothecaire bibliothecaire) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scenes/biblioHome.fxml"));
 
@@ -150,7 +151,7 @@ public class LoginController implements ControllerMethods {
         stage.show();
     }
 
-    //go to the adherentHome page after login
+    //thezek lel page adherent
     public void redirectAdherentHome(Adherent adherent) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scenes/adherentHome.fxml"));
 

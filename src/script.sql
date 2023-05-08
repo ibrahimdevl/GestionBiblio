@@ -95,7 +95,7 @@ CREATE TABLE `libraryproject`.`emprunt`
     `idDoc`       INT(4) UNSIGNED NOT NULL COMMENT 'id de document',
     `retourne`    BOOLEAN         NOT NULL COMMENT 'Est ce le document est retourne',
     PRIMARY KEY (`idEmprunt`),
-    FOREIGN KEY (`idAdh`) REFERENCES adherent (`idUtlstr`),
+    FOREIGN KEY (`idAdh`) REFERENCES adherent (`idUtlstr`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`idBiblio`) REFERENCES bibliothecaire (`idUtlstr`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`idDoc`) REFERENCES document (`idDoc`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;

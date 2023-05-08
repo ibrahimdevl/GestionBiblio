@@ -8,7 +8,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-
 public class Main extends Application implements ControllerMethods {
     @Override
     public void start(Stage stage) throws Exception {
