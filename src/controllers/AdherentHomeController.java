@@ -69,7 +69,7 @@ public class AdherentHomeController implements ControllerMethods, Initializable 
             documentDataList.clear();
             query = "SELECT * FROM document " +
                     "LEFT JOIN emprunt ON document.idDoc = emprunt.idDoc " +
-                    "WHERE emprunt.idEmprunt IS NULL;";
+                    "WHERE emprunt.retourne = 1;";
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
 
