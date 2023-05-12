@@ -107,7 +107,7 @@
                      </children>
                   </HBox>
                   <Button mnemonicParsing="false" onAction="#adherentAdd" text="Ajouter Adherent" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
-                  <Button mnemonicParsing="false" onAction="#refreshAdherentTable" text="Actualiser" GridPane.rowIndex="4" />
+                  <Button mnemonicParsing="false" onAction="#refreshAdherentTable" text="Actualiser" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
                </children>
             </GridPane>
          </children>
