@@ -175,9 +175,9 @@ CREATE TABLE `utilisateur` (
 
 INSERT INTO `utilisateur` (`idUtlstr`, `nomUtlstr`, `motDePasse`, `nom`, `prenom`, `addresse`, `tel`) VALUES
 (1, 'Hlel', 'Test1234', 'Mohamed Aziz', 'Hlel', 'Raoued', 54385290),
-(2, 'Kammoun', 'mdp1234', 'Hale', 'Kammoun', 'Ghazela', 52789456),
-(3, 'Nour', 'mdp0000', 'Nour', 'Barrani', 'Tunis', 24567891),
-(4, 'Mootez', 'Test0000', 'Mootez', 'Bani', 'Nabeul', 98456123),
+(2, 'Kammoun', 'mdp1234', 'John', 'Doe', 'Ghazela', 52789456),
+(3, 'Nour', 'mdp0000', 'Test', 'Testou', 'Tunis', 24567891),
+(4, 'Mootez', 'Test0000', 'John', 'Smith', 'Nabeul', 98456123),
 (6, 'test', 'Test1234', 'Mohame', 'Hlfvfel', 'Raoued', 54385290),
 (8, 'ghfgh', 'jgkgkkhk', 'rtghjk', 'gbn', 'ghjgjf f', 36985741);
 
