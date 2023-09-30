@@ -13,11 +13,12 @@ public class DatabaseConnection {
         Connection databaseLink = null;
 
         try {
-            prop.load(new FileInputStream("config.properties"));
+            prop.load(new FileInputStream("src/config.properties"));
             String databaseName = prop.getProperty("databaseName");
             String databaseUser = prop.getProperty("databaseUser");
             String databasePassword = prop.getProperty("databasePassword");
-            String url = "jdbc:mysql://localhost/" + databaseName;
+            String databasePort = prop.getProperty("databasePort");
+            String url = "jdbc:mysql://localhost:" + databasePort + "/" + databaseName;
 
             Class.forName("com.mysql.cj.jdbc.Driver");
             databaseLink = DriverManager.getConnection(url, databaseUser, databasePassword);
