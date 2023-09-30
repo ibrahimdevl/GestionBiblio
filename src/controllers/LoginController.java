@@ -64,7 +64,7 @@ public class LoginController implements ControllerMethods {
 
     //ythabet chnowa naw3 el utilisateur
     public void validateLogin() {
-        Connection connect = DatabaseConnection.getConnection(); //yconnecty lel base donnée
+        Connection connectDB = DatabaseConnection.getConnection(); //yconnecty lel base donnée
         String username = usernameTextField.getText();
         String password = passwordPasswordField.getText();
         String verifyLogin = "SELECT COUNT(1) FROM `utilisateur` WHERE `nomUtlstr`='" + username + "' AND `motDePasse`='" + password + "';";//requete bech tlawej 3al utilisateur mawjoud wala le
