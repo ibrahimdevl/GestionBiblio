@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import utils.PasswordHashingUtil;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -61,7 +62,6 @@ public class AddAdherentController implements Initializable {
             alert.setContentText("Veuillez Remplir Toutes LES DONNÉES necessaires");
             alert.showAndWait();
         } else {
-
             try {
                 getQuery();
                 insert();
@@ -102,7 +102,7 @@ public class AddAdherentController implements Initializable {
         try {
             preparedStatement = connection.prepareStatement(userQuery);
             preparedStatement.setString(1, usernameTextField.getText());
-            preparedStatement.setString(2, passwordTextField.getText());
+            preparedStatement.setString(2, PasswordHashingUtil.hashPassword(passwordTextField.getText()));
             preparedStatement.setString(3, nomTextField.getText());
             preparedStatement.setString(4, prenomTextField.getText());
             preparedStatement.setString(5, addresseTextField.getText());
