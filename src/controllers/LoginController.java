@@ -15,11 +15,10 @@ import models.Adherent;
 import models.Admin;
 import models.Bibliothecaire;
 import models.Utilisateur;
+import utils.PasswordHashingUtil;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
 public class LoginController implements ControllerMethods {
     //torbet fxml bel java
@@ -67,20 +66,23 @@ public class LoginController implements ControllerMethods {
         Connection connectDB = DatabaseConnection.getConnection(); //yconnecty lel base donnée
         String username = usernameTextField.getText();
         String password = passwordPasswordField.getText();
-        String verifyLogin = "SELECT COUNT(1) FROM `utilisateur` WHERE `nomUtlstr`='" + username + "' AND `motDePasse`='" + password + "';";//requete bech tlawej 3al utilisateur mawjoud wala le
+        String verifyUsername = "SELECT COUNT(1) FROM `utilisateur` WHERE `nomUtlstr`='" + username + "';";//requete bech tlawej 3al utilisateur mawjoud wala le
+
         try {
             Statement statement = connectDB.createStatement();
-            ResultSet loginResult = statement.executeQuery(verifyLogin);//executer el requete
+            ResultSet loginResult = statement.executeQuery(verifyUsername);//executer el requete
+            String hashedPassword = getHashedPasswordByUsername(username, connectDB);
+            boolean verifyLogin = PasswordHashingUtil.verifyPassword(password, hashedPassword);
             //check if credentials are valid
             if (loginResult.next()) {
-                if (loginResult.getInt(1) == 1) { //law ken utilisateur mawjoud
+                if (verifyLogin) { //law ken utilisateur mawjoud
                     //save user info into an object
-                    String checkUserType = "SELECT CASE WHEN a.idUtlstr IS NOT NULL THEN 'admin' WHEN b.idUtlstr IS NOT NULL THEN 'bibliothecaire' WHEN ad.idUtlstr IS NOT NULL THEN 'adherent' ELSE 'utilisateur' END AS `table` FROM utilisateur u LEFT JOIN admin a ON u.idUtlstr = a.idUtlstr LEFT JOIN bibliothecaire b ON u.idUtlstr = b.idUtlstr LEFT JOIN adherent ad ON u.idUtlstr = ad.idUtlstr WHERE u.nomUtlstr = '" + username + "' AND u.motDePasse = '" + password + "' AND (a.idUtlstr IS NOT NULL OR b.idUtlstr IS NOT NULL OR ad.idUtlstr IS NOT NULL);";
+                    String checkUserType = "SELECT CASE WHEN a.idUtlstr IS NOT NULL THEN 'admin' WHEN b.idUtlstr IS NOT NULL THEN 'bibliothecaire' WHEN ad.idUtlstr IS NOT NULL THEN 'adherent' ELSE 'utilisateur' END AS `table` FROM utilisateur u LEFT JOIN admin a ON u.idUtlstr = a.idUtlstr LEFT JOIN bibliothecaire b ON u.idUtlstr = b.idUtlstr LEFT JOIN adherent ad ON u.idUtlstr = ad.idUtlstr WHERE u.nomUtlstr = '" + username + "' AND (a.idUtlstr IS NOT NULL OR b.idUtlstr IS NOT NULL OR ad.idUtlstr IS NOT NULL);";
                     ResultSet userTypeResult = statement.executeQuery(checkUserType);//ya3ref chnowa naw3 el utilisateur
                     if (userTypeResult.next()) {
                         if (userTypeResult.getString(1).equals("admin")) {//law ken admin
                             Admin admin = new Admin();//thez les donnees mel base lel variable
-                            String adminInfo = "SELECT utilisateur.* , admin.departement , admin.email FROM `utilisateur`, `admin`WHERE utilisateur.idUtlstr=admin.idUtlstr AND utilisateur.nomUtlstr = '" + username + "' AND utilisateur.motDePasse='" + password + "';";
+                            String adminInfo = "SELECT utilisateur.* , admin.departement , admin.email FROM `utilisateur`, `admin`WHERE utilisateur.idUtlstr=admin.idUtlstr AND utilisateur.nomUtlstr = '" + username + "';";
                             ResultSet adminInfoResult = statement.executeQuery(adminInfo);
                             if (adminInfoResult.next()) {
                                 admin.createAdminInstance(adminInfoResult);//nasn3ou variable admin fih les info
@@ -88,7 +90,7 @@ public class LoginController implements ControllerMethods {
                             }
                         } else if (userTypeResult.getString(1).equals("bibliothecaire")) {
                             Bibliothecaire bibliothecaire = new Bibliothecaire();
-                            String biblioInfo = "SELECT utilisateur.* , bibliothecaire.dateEmbauche , bibliothecaire.salaire FROM `utilisateur`, `bibliothecaire` WHERE utilisateur.idUtlstr=bibliothecaire.idUtlstr AND utilisateur.nomUtlstr ='" + username + "' AND utilisateur.motDePasse='" + password + "';";
+                            String biblioInfo = "SELECT utilisateur.* , bibliothecaire.dateEmbauche , bibliothecaire.salaire FROM `utilisateur`, `bibliothecaire` WHERE utilisateur.idUtlstr=bibliothecaire.idUtlstr AND utilisateur.nomUtlstr ='" + username + "';";
                             ResultSet biblioInfoResult = statement.executeQuery(biblioInfo);
                             if (biblioInfoResult.next()) {
                                 bibliothecaire.createBibliothecaireInstance(biblioInfoResult);
@@ -96,7 +98,7 @@ public class LoginController implements ControllerMethods {
                             }
                         } else if (userTypeResult.getString(1).equals("adherent")) {
                             Adherent adherent = new Adherent();
-                            String adherentInfo = "SELECT utilisateur.* , adherent.cin , adherent.dateInscription FROM `utilisateur`, `adherent` WHERE utilisateur.idUtlstr=adherent.idUtlstr AND utilisateur.nomUtlstr = '" + username + "' AND utilisateur.motDePasse='" + password + "';";
+                            String adherentInfo = "SELECT utilisateur.* , adherent.cin , adherent.dateInscription FROM `utilisateur`, `adherent` WHERE utilisateur.idUtlstr=adherent.idUtlstr AND utilisateur.nomUtlstr = '" + username + "';";
                             ResultSet adherentInfoResult = statement.executeQuery(adherentInfo);
                             if (adherentInfoResult.next()) {
                                 adherent.createAdherentInstance(adherentInfoResult);
@@ -165,5 +167,22 @@ public class LoginController implements ControllerMethods {
 
         stage.setScene(scene);
         stage.show();
+    }
+
+    private String getHashedPasswordByUsername(String username, Connection connection) {
+        String SELECT_HASHED_PASSWORD = "SELECT motDePasse FROM `utilisateur` WHERE nomUtlstr = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HASHED_PASSWORD)) {
+
+            preparedStatement.setString(1, username); // Bind the username to the query
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getString("motDePasse");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null; // Return null if the user does not exist or there was an error
     }
 }

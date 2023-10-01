@@ -21,6 +21,8 @@ import javafx.stage.StageStyle;
 import models.Adherent;
 import models.Admin;
 import models.Bibliothecaire;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -70,6 +72,35 @@ public class AdminHomeController implements ControllerMethods, Initializable {
     private TableColumn<Bibliothecaire, String> biblioPrenomCol;
     @FXML
     private TableColumn<Bibliothecaire, Date> biblioDateCol;
+
+    @FXML
+    private Pane movablePane;
+
+    private double xOffset = 0;
+    private double yOffset = 0;
+
+    @FXML
+    private void initialize() {
+        // Add mouse event handlers to make the Pane movable
+        movablePane.setOnMousePressed(this::onMousePressed);
+        movablePane.setOnMouseDragged(this::onMouseDragged);
+    }
+
+    private void onMousePressed(MouseEvent event) {
+        xOffset = event.getSceneX();
+        yOffset = event.getSceneY();
+    }
+
+    private void onMouseDragged(MouseEvent event) {
+        double deltaX = event.getSceneX() - xOffset;
+        double deltaY = event.getSceneY() - yOffset;
+
+        movablePane.setLayoutX(movablePane.getLayoutX() + deltaX);
+        movablePane.setLayoutY(movablePane.getLayoutY() + deltaY);
+
+        xOffset = event.getSceneX();
+        yOffset = event.getSceneY();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
