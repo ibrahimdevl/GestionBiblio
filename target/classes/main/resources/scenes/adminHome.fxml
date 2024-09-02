@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.AdminHomeController">
+   <top>
+      <AnchorPane prefHeight="100.0" prefWidth="650.0" style="-fx-background-color: #263F73;" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="welcomeLabel" layoutX="14.0" layoutY="27.0" text="Bienvenue Admin !" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="32.0" />
+               </font>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Label>
+            <Button fx:id="logoutButton" layoutX="537.0" layoutY="38.0" mnemonicParsing="false" onAction="#redirectLogin" style="-fx-background-color: black;" text="Déconnexion " textFill="WHITE" AnchorPane.rightAnchor="25.0">
+               <effect>
+                  <Glow />
+               </effect>
+            </Button>
+         </children>
+      </AnchorPane>
+   </top>
+   <right>
+      <AnchorPane minWidth="400.0" prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+         <children>
+            <GridPane layoutX="10.0" layoutY="67.0" maxWidth="350.0" prefWidth="350.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="130.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="130.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="130.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="50.0" minHeight="10.0" />
+                  <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="150.0" minHeight="50.0" />
+                  <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" />
+               </rowConstraints>
+               <children>
+                  <Label prefWidth="184.0" text="Rechercher un adherent :" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+                  <TextField fx:id="adherentSearchField" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <Button onAction="#adherentSearchForRows" text="Recherche" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <TableView fx:id="adherentTableView" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                     <columns>
+                        <TableColumn fx:id="nomCol" editable="false" maxWidth="130.0" prefWidth="130.0" text="Nom" />
+                        <TableColumn fx:id="prenomCol" editable="false" maxWidth="130.0" prefWidth="130.0" text="Prenom" />
+                        <TableColumn fx:id="cinCol" maxWidth="130.0" prefWidth="130.0" text="CIN" />
+                     </columns>
+                  </TableView>
+                  <HBox alignment="CENTER" prefWidth="315.0" spacing="10" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                     <Button onAction="#adherentEditSelectedRow" text="Modifier Adherent" />
+                     <Button onAction="#adherentDeleteSelectedRow" text="Supprimer adherent" />
+                  </HBox>
+                  <Button mnemonicParsing="false" onAction="#adherentAdd" text="Ajouter Adherent" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                  <Button mnemonicParsing="false" onAction="#refreshAdherentTable" text="Actualiser" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+               </children>
+            </GridPane>
+            <Label alignment="CENTER" layoutY="26.0" prefHeight="17.0" prefWidth="321.0" text="Gestion des adherents" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </right>
+   <left>
+      <AnchorPane prefHeight="400.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" layoutY="30.0" prefHeight="27.0" prefWidth="324.0" text="Gestion des bibliothequaires" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Label>
+            <GridPane layoutX="10.0" layoutY="67.0" maxWidth="350.0" prefWidth="350.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="130.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="130.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="130.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="50.0" minHeight="10.0" />
+                  <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="150.0" minHeight="50.0" />
+                  <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" />
+                  <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" />
+               </rowConstraints>
+               <children>
+                  <Label prefWidth="184.0" text="Rechercher un bibliothecaire:" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+                  <TextField fx:id="biblioSearchField" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <Button onAction="#biblioSearchForRows" text="Recherche" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <TableView fx:id="biblioTableView" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                     <columns>
+                        <TableColumn fx:id="biblioNomCol" editable="false" maxWidth="130.0" prefWidth="130.0" text="Nom" />
+                        <TableColumn fx:id="biblioPrenomCol" editable="false" maxWidth="130.0" prefWidth="130.0" text="Prenom" />
+                        <TableColumn fx:id="biblioDateCol" maxWidth="130.0" prefWidth="130.0" text="Date embauche" />
+                     </columns>
+                  </TableView>
+                  <HBox alignment="CENTER" prefWidth="315.0" spacing="10" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                     <children>
+                        <Button onAction="#biblioEditSelectedRow" text="Modifier Bibliothecaire" />
+                        <Button onAction="#biblioDeleteSelectedRow" text="Supprimer Bibliothecaire" />
+                     </children>
+                  </HBox>
+                  <Button mnemonicParsing="false" onAction="#biblioAdd" text="Ajouter Bibliothecaire" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+                  <Button mnemonicParsing="false" onAction="#refreshBibliothecaireTable" text="Actualiser" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+               </children>
+            </GridPane>
+         </children>
+      </AnchorPane>
+   </left>
+   <center>
+      <Separator orientation="VERTICAL" prefHeight="200.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

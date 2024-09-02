@@ -1,6 +1,7 @@
 package application;
 
 import controllers.ControllerMethods;
+import databaseConnection.DatabaseConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,7 +14,7 @@ public class Main extends Application implements ControllerMethods {
     public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/scenes/login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 520, 400);
-        stage.setTitle("Bibliothéque Tek-Up");
+        stage.setTitle("Bibliothéque");
         Image icon = new Image("icon.png");
         stage.getIcons().add(icon);
         stage.setResizable(false);

@@ -18,8 +18,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import models.Adherent;
 import models.Document;
-import models.EmpruntPretData;
-import models.Utilisateur;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +25,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 
