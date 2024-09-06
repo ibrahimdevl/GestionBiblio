@@ -36,12 +36,27 @@ public class DatabaseConnection {
     }
 
     public static void runScript(String filePath) throws Exception {
-
+        String script = new String(Files.readAllBytes(Paths.get(filePath)));
         Connection conn = getConnection();
         Statement stmt = conn.createStatement();
 
-        String sql = new String(Files.readAllBytes(Paths.get(filePath)));
-        stmt.execute(sql);
+        // Split the script into individual statements
+        String[] statements = script.split(";");
+
+        for (String statement : statements) {
+            // Trim whitespace and skip empty statements
+            statement = statement.trim();
+            if (!statement.isEmpty()) {
+                try {
+                    stmt.execute(statement);
+                } catch (SQLException e) {
+                    System.err.println("Error executing statement: " + statement);
+                    System.err.println("Error message: " + e.getMessage());
+                    // Optionally, you can throw the exception here if you want to stop execution on first error
+                    // throw e;
+                }
+            }
+        }
 
         stmt.close();
         conn.close();

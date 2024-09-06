@@ -12,6 +12,8 @@ import javafx.stage.StageStyle;
 public class Main extends Application implements ControllerMethods {
     @Override
     public void start(Stage stage) throws Exception {
+        // Run the script to create the database and tables
+        DatabaseConnection.runScript("src/main/resources/libraryproject.sql");
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/scenes/login.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 520, 400);
         stage.setTitle("Bibliothéque");
