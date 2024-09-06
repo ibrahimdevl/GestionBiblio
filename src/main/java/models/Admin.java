@@ -3,7 +3,7 @@ package models;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Admin extends Utilisateur{
+public class Admin extends User {
     private String departement;
     private String email;
 

@@ -4,16 +4,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-public class Pret {
+public class Reservation {
     private int idPret;
     private int idDocument;
     private int idAdherent;
     private Date datePret;
     private boolean validee;
 
-    public Pret() {}
+    public Reservation() {}
 
-    public Pret(int idPret, int idDocument, int idAdherent, Date datePret, boolean validee) {
+    public Reservation(int idPret, int idDocument, int idAdherent, Date datePret, boolean validee) {
         this.idPret = idPret;
         this.idDocument = idDocument;
         this.idAdherent = idAdherent;

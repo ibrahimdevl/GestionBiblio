@@ -1,57 +1,57 @@
 package models;
 
 public class Document {
-	private int idDoc;
+	private int documentId;
 	private String reference;
-	private String titre;
-	private String auteur;
+	private String title;
+	private String author;
 
 	public Document() {}
 
-	public Document(String titre, String auteur) {
-		this.titre = titre;
-		this.auteur = auteur;
+	public Document(String title, String author) {
+		this.title = title;
+		this.author = author;
 	}
 
-	public Document(int idDoc, String reference, String titre, String auteur) {
-		this.idDoc = idDoc;
+	public Document(int documentId, String reference, String title, String author) {
+		this.documentId = documentId;
 		this.reference = reference;
-		this.titre = titre;
-		this.auteur = auteur;
+		this.title = title;
+		this.author = author;
 	}
 
 	@Override
 	public String toString() {
 		return "Document{" +
-				"idDoc=" + idDoc +
+				"idDoc=" + documentId +
 				", reference='" + reference + '\'' +
-				", titre='" + titre + '\'' +
-				", auteur='" + auteur + '\'' +
+				", titre='" + title + '\'' +
+				", auteur='" + author + '\'' +
 				'}';
 	}
 
-	public int getIdDoc() {
-		return idDoc;
+	public int getDocumentId() {
+		return documentId;
 	}
 
-	public void setIdDoc(int idDoc) {
-		this.idDoc = idDoc;
+	public void setDocumentId(int documentId) {
+		this.documentId = documentId;
 	}
 
-	public String getTitre() {
-		return titre;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setTitre(String titre) {
-		this.titre = titre;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
-	public String getAuteur() {
-		return auteur;
+	public String getAuthor() {
+		return author;
 	}
 
-	public void setAuteur(String auteur) {
-		this.auteur = auteur;
+	public void setAuthor(String author) {
+		this.author = author;
 	}
 
 
@@ -64,7 +64,7 @@ public class Document {
 	}
 
 	public boolean matchesSearch(String searchString) {
-		return getTitre().contains(searchString) ||
-				getAuteur().contains(searchString);
+		return getTitle().contains(searchString) ||
+				getAuthor().contains(searchString);
 	}
 }

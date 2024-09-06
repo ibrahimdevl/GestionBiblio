@@ -16,7 +16,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import models.Adherent;
+import models.Member;
 import models.Document;
 
 import java.io.IOException;
@@ -28,15 +28,15 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 
-public class AdherentHomeController implements ControllerMethods, Initializable {
+public class MemberHomeController implements ControllerMethods, Initializable {
 
     @FXML private Label welcomeLabel;
     @FXML
     private TableView<Document> documentTableView;
     @FXML
-    private TableColumn<Document,String> titreCol;
+    private TableColumn<Document,String> titleCol;
     @FXML
-    private TableColumn<Document,String> auteurCol;
+    private TableColumn<Document,String> authorCol;
     @FXML
     private TextField documentSearchField;
     ObservableList<Document> documentDataList = FXCollections.observableArrayList();
@@ -48,34 +48,34 @@ public class AdherentHomeController implements ControllerMethods, Initializable 
 
     private Stage stage;
     private Scene scene;
-    protected Adherent adherent;
+    protected Member member;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loadEmprunt();
+        loadLoan();
     }
 
-    private void loadEmprunt(){
+    private void loadLoan(){
         refreshDocumentTable();
-        titreCol.setCellValueFactory(new PropertyValueFactory<>("titre"));
-        auteurCol.setCellValueFactory(new PropertyValueFactory<>("auteur"));
+        titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
+        authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
     }
 
     public void refreshDocumentTable() {
         try {
             documentDataList.clear();
-            query = "SELECT * FROM document " +
-                    "LEFT JOIN emprunt ON document.idDoc = emprunt.idDoc " +
-                    "WHERE emprunt.retourne = 1 OR emprunt.idEmprunt IS NULL ;";
+            query = "SELECT * FROM documents " +
+                    "LEFT JOIN loans ON documents.document_id = loans.document_id " +
+                    "WHERE loans.is_returned = 1 OR loans.loan_id IS NULL ;";
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                int idDoc = resultSet.getInt("idDoc");
+                int documentId = resultSet.getInt("document_id");
                 String reference = resultSet.getString("reference");
-                String titre = resultSet.getString("titre");
-                String auteur = resultSet.getString("auteur");
-                Document document = new Document(idDoc,reference,titre,auteur);
+                String title = resultSet.getString("title");
+                String author = resultSet.getString("author");
+                Document document = new Document(documentId, reference, title, author);
                 documentDataList.add(document);
                 documentTableView.setItems(documentDataList);
             }
@@ -97,10 +97,9 @@ public class AdherentHomeController implements ControllerMethods, Initializable 
     }
 
     //custom welcome message
-    public void displayName(String nom, String prenom){
-        welcomeLabel.setText("Bienvenue "+nom+" "+prenom+"!");
+    public void displayName(String lastName, String firstName){
+        welcomeLabel.setText("Welcome "+lastName+" "+firstName+"!");
     }
-
 
     public void documentSearchForRows() {
         String searchString = documentSearchField.getText();
@@ -117,15 +116,15 @@ public class AdherentHomeController implements ControllerMethods, Initializable 
         }
     }
 
-    public void emprunter(ActionEvent actionEvent) {
-        Document document=documentTableView.getSelectionModel().getSelectedItem();
+    public void reserve(ActionEvent actionEvent) {
+        Document document = documentTableView.getSelectionModel().getSelectedItem();
 
-        query="INSERT INTO `pret` (`idDoc`, `idAdh`, `datePret`, `validee`) VALUES (?,?,?,'0')";
+        query = "INSERT INTO `reservations` (`document_id`, `member_id`, `reservation_date`, `is_validated`) VALUES (?,?,?,'0')";
         try {
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1,document.getIdDoc());
-            preparedStatement.setInt(2,adherent.getIdUtlstr());
-            preparedStatement.setDate(3,new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
+            preparedStatement.setInt(1, document.getDocumentId());
+            preparedStatement.setInt(2, member.getUserId());
+            preparedStatement.setDate(3, new java.sql.Date(Calendar.getInstance().getTimeInMillis()));
             preparedStatement.execute();
         }
         catch (SQLException ex){
@@ -133,10 +132,9 @@ public class AdherentHomeController implements ControllerMethods, Initializable 
         }
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
-        alert.setContentText("Pret envoyée au bibliothecaire pour emprunter");
+        alert.setContentText("Reservation request sent to librarian");
         alert.show();
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> alert.hide()));
         timeline.play();
-
     }
 }

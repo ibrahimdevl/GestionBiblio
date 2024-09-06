@@ -18,9 +18,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import models.Adherent;
+import models.Librarian;
+import models.Member;
 import models.Admin;
-import models.Bibliothecaire;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
@@ -43,35 +43,34 @@ public class AdminHomeController implements ControllerMethods, Initializable {
     PreparedStatement preparedStatement = null;
     ResultSet resultSet = null;
     Admin admin;
-    Adherent adherent;
-    Bibliothecaire bibliothecaire;
-
+    Member member;
+    Librarian librarian;
 
     // Execute query and retrieve data
-    ObservableList<Adherent> AdherentList = FXCollections.observableArrayList();
-    ObservableList<Bibliothecaire> BibliothecaireList = FXCollections.observableArrayList();
+    ObservableList<Member> memberList = FXCollections.observableArrayList();
+    ObservableList<Librarian> librarianList = FXCollections.observableArrayList();
     @FXML
     private Label welcomeLabel;
     @FXML
-    private TextField adherentSearchField;
+    private TextField memberSearchField;
     @FXML
-    private TextField biblioSearchField;
+    private TextField librarianSearchField;
     @FXML
-    private TableView<Adherent> adherentTableView;
+    private TableView<Member> memberTableView;
     @FXML
-    private TableColumn<Adherent, String> nomCol;
+    private TableColumn<Member, String> lastNameCol;
     @FXML
-    private TableColumn<Adherent, String> prenomCol;
+    private TableColumn<Member, String> firstNameCol;
     @FXML
-    private TableColumn<Adherent, Integer> cinCol;
+    private TableColumn<Member, Integer> idNumberCol;
     @FXML
-    private TableView<Bibliothecaire> biblioTableView;
+    private TableView<Librarian> librarianTableView;
     @FXML
-    private TableColumn<Bibliothecaire, String> biblioNomCol;
+    private TableColumn<Librarian, String> librarianLastNameCol;
     @FXML
-    private TableColumn<Bibliothecaire, String> biblioPrenomCol;
+    private TableColumn<Librarian, String> librarianFirstNameCol;
     @FXML
-    private TableColumn<Bibliothecaire, Date> biblioDateCol;
+    private TableColumn<Librarian, Date> librarianHireDateCol;
 
     @FXML
     private Pane movablePane;
@@ -108,22 +107,20 @@ public class AdminHomeController implements ControllerMethods, Initializable {
     }
 
     @FXML
-    public void refreshAdherentTable() {
+    public void refreshMemberTable() {
         try {
-            AdherentList.clear();
+            memberList.clear();
 
-            query = "SELECT utilisateur.* , adherent.cin , adherent.dateInscription FROM `utilisateur`, `adherent` WHERE adherent.idUtlstr=utilisateur.idUtlstr";
+            query = "SELECT users.* , members.id_number , members.registration_date FROM `users`, `members` WHERE members.user_id=users.user_id";
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Adherent adh = new Adherent();
-                adh.createAdherentInstance(resultSet);
-                AdherentList.add(adh);
-                adherentTableView.setItems(AdherentList);
-
+                Member member = new Member();
+                member.createMemberInstance(resultSet);
+                memberList.add(member);
+                memberTableView.setItems(memberList);
             }
-
 
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -131,115 +128,109 @@ public class AdminHomeController implements ControllerMethods, Initializable {
     }
 
     @FXML
-    private void refreshBibliothecaireTable() {
+    private void refreshLibrarianTable() {
         try {
-            BibliothecaireList.clear();
+            librarianList.clear();
 
-            query = "SELECT utilisateur.* , bibliothecaire.dateEmbauche , bibliothecaire.salaire FROM `utilisateur`, `bibliothecaire` WHERE bibliothecaire.idUtlstr=utilisateur.idUtlstr";
+            query = "SELECT users.* , librarians.hire_date , librarians.salary FROM `users`, `librarians` WHERE librarians.user_id=users.user_id";
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Bibliothecaire biblio = new Bibliothecaire();
-                biblio.createBibliothecaireInstance(resultSet);
-                BibliothecaireList.add(biblio);
-                biblioTableView.setItems(BibliothecaireList);
-
+                Librarian librarian = new Librarian();
+                librarian.createLibrarianInstance(resultSet);
+                librarianList.add(librarian);
+                librarianTableView.setItems(librarianList);
             }
 
-
         } catch (SQLException ex) {
-            Logger.getLogger(AdherentHomeController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MemberHomeController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     private void loadDate() {
+        refreshMemberTable();
 
-        refreshAdherentTable();
+        lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        idNumberCol.setCellValueFactory(new PropertyValueFactory<>("idNumber"));
+        memberTableView.setItems(memberList);
 
-        nomCol.setCellValueFactory(new PropertyValueFactory<>("Nom"));
-        prenomCol.setCellValueFactory(new PropertyValueFactory<>("Prenom"));
-        cinCol.setCellValueFactory(new PropertyValueFactory<>("Cin"));
-        adherentTableView.setItems(AdherentList);
+        refreshLibrarianTable();
 
-        refreshBibliothecaireTable();
-
-        biblioNomCol.setCellValueFactory(new PropertyValueFactory<>("Nom"));
-        biblioPrenomCol.setCellValueFactory(new PropertyValueFactory<>("Prenom"));
-        biblioDateCol.setCellValueFactory(new PropertyValueFactory<>("DateEmbauche"));
-        biblioTableView.setItems(BibliothecaireList);
-
-
+        librarianLastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        librarianFirstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        librarianHireDateCol.setCellValueFactory(new PropertyValueFactory<>("hireDate"));
+        librarianTableView.setItems(librarianList);
     }
 
-    public void adherentSearchForRows() {
-        String searchString = adherentSearchField.getText();
+    public void memberSearchForRows() {
+        String searchString = memberSearchField.getText();
         if (searchString == null || searchString.isEmpty()) {
-            adherentTableView.setItems(AdherentList);
+            memberTableView.setItems(memberList);
         } else {
-            ObservableList<Adherent> filteredData = FXCollections.observableArrayList();
-            for (Adherent adherent : AdherentList) {
-                if (adherent.matchesSearch(searchString)) {
-                    filteredData.add(adherent);
+            ObservableList<Member> filteredData = FXCollections.observableArrayList();
+            for (Member member : memberList) {
+                if (member.matchesSearch(searchString)) {
+                    filteredData.add(member);
                 }
             }
-            adherentTableView.setItems(filteredData);
+            memberTableView.setItems(filteredData);
         }
     }
 
-    public void adherentEditSelectedRow() {
-        adherent = adherentTableView.getSelectionModel().getSelectedItem();
+    public void memberEditSelectedRow() {
+        member = memberTableView.getSelectionModel().getSelectedItem();
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/scenes/addAdherent.fxml"));
+        loader.setLocation(getClass().getResource("/scenes/addMember.fxml"));
         try {
             loader.load();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        BiblioHomeController.redirectAdherentEdit(loader, adherent);
-
+        LibrarianHomeController.redirectMemberEdit(loader, member);
     }
 
-    public void adherentDeleteSelectedRow() {
+    public void memberDeleteSelectedRow() {
         try {
-            adherent = adherentTableView.getSelectionModel().getSelectedItem();
-            query = "DELETE FROM `utilisateur` WHERE idUtlstr  =" + adherent.getIdUtlstr();
+            member = memberTableView.getSelectionModel().getSelectedItem();
+            query = "DELETE FROM `users` WHERE user_id = " + member.getUserId();
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.execute();
-            refreshAdherentTable();
+            refreshMemberTable();
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
-    public void biblioSearchForRows() {
-        String searchString = biblioSearchField.getText();
+    public void librarianSearchForRows() {
+        String searchString = librarianSearchField.getText();
         if (searchString == null || searchString.isEmpty()) {
-            biblioTableView.setItems(BibliothecaireList);
+            librarianTableView.setItems(librarianList);
         } else {
-            ObservableList<Bibliothecaire> filteredData = FXCollections.observableArrayList();
-            for (Bibliothecaire bibliothecaire : BibliothecaireList) {
-                if (bibliothecaire.matchesSearch(searchString)) {
-                    filteredData.add(bibliothecaire);
+            ObservableList<Librarian> filteredData = FXCollections.observableArrayList();
+            for (Librarian librarian : librarianList) {
+                if (librarian.matchesSearch(searchString)) {
+                    filteredData.add(librarian);
                 }
             }
-            biblioTableView.setItems(filteredData);
+            librarianTableView.setItems(filteredData);
         }
     }
 
-    public void biblioEditSelectedRow() {
-        bibliothecaire = biblioTableView.getSelectionModel().getSelectedItem();
+    public void librarianEditSelectedRow() {
+        librarian = librarianTableView.getSelectionModel().getSelectedItem();
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/scenes/addBibliothecaire.fxml"));
+        loader.setLocation(getClass().getResource("/scenes/addLibrarian.fxml"));
         try {
             loader.load();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        AddBibliothecaireController addBibliothecaireController = loader.getController();
-        addBibliothecaireController.setUpdate();
-        addBibliothecaireController.setTextField(bibliothecaire.getIdUtlstr(), bibliothecaire.getNomUtlstr(),bibliothecaire.getMotDePasse(), bibliothecaire.getNom(), bibliothecaire.getPrenom(),bibliothecaire.getAddress(),bibliothecaire.getNumTel(),bibliothecaire.getSalaire(),bibliothecaire.getDateEmbauche());
+        AddLibrarianController addLibrarianController = loader.getController();
+        addLibrarianController.setUpdate();
+        addLibrarianController.setTextField(librarian.getUserId(), librarian.getUsername(), librarian.getPassword(), librarian.getLastName(), librarian.getFirstName(), librarian.getAddress(), librarian.getPhone(), librarian.getSalary(), librarian.getHireDate());
         Parent parent = loader.getRoot();
         Stage stage = new Stage();
         stage.setScene(new Scene(parent));
@@ -247,13 +238,13 @@ public class AdminHomeController implements ControllerMethods, Initializable {
         stage.show();
     }
 
-    public void biblioDeleteSelectedRow() {
+    public void librarianDeleteSelectedRow() {
         try {
-            bibliothecaire = biblioTableView.getSelectionModel().getSelectedItem();
-            query = "DELETE FROM `utilisateur` WHERE idUtlstr  =" + bibliothecaire.getIdUtlstr();
+            librarian = librarianTableView.getSelectionModel().getSelectedItem();
+            query = "DELETE FROM `users` WHERE user_id = " + librarian.getUserId();
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.execute();
-            refreshBibliothecaireTable();
+            refreshLibrarianTable();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -272,15 +263,14 @@ public class AdminHomeController implements ControllerMethods, Initializable {
     }
 
     //custom welcome message
-    public void displayName(String nom, String prenom) {
-        welcomeLabel.setText("Bienvenue " + nom + " " + prenom + "!");
+    public void displayName(String lastName, String firstName) {
+        welcomeLabel.setText("Welcome " + lastName + " " + firstName + "!");
     }
 
-
-    public void adherentAdd() {
-        adherent = adherentTableView.getSelectionModel().getSelectedItem();
+    public void memberAdd() {
+        member = memberTableView.getSelectionModel().getSelectedItem();
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/scenes/addAdherent.fxml"));
+        loader.setLocation(getClass().getResource("/scenes/addMember.fxml"));
         try {
             loader.load();
         } catch (IOException ex) {
@@ -293,10 +283,10 @@ public class AdminHomeController implements ControllerMethods, Initializable {
         stage.show();
     }
 
-    public void biblioAdd() {
-        bibliothecaire = biblioTableView.getSelectionModel().getSelectedItem();
+    public void librarianAdd() {
+        librarian = librarianTableView.getSelectionModel().getSelectedItem();
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/scenes/addBibliothecaire.fxml"));
+        loader.setLocation(getClass().getResource("/scenes/addLibrarian.fxml"));
         try {
             loader.load();
         } catch (IOException ex) {

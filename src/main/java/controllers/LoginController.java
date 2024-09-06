@@ -11,10 +11,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import models.Adherent;
+import models.Librarian;
+import models.Member;
 import models.Admin;
-import models.Bibliothecaire;
-import models.Utilisateur;
+import models.User;
 import utils.PasswordHashingUtil;
 
 import java.io.IOException;
@@ -61,12 +61,12 @@ public class LoginController implements ControllerMethods {
         }
     }
 
-    //ythabet chnowa naw3 el utilisateur
+    //ythabet chnowa naw3 el user
     public void validateLogin() {
         Connection connectDB = DatabaseConnection.getConnection(); //yconnecty lel base donnée
         String username = usernameTextField.getText();
         String password = passwordPasswordField.getText();
-        String verifyUsername = "SELECT COUNT(1) FROM `utilisateur` WHERE `nomUtlstr`='" + username + "';";//requete bech tlawej 3al utilisateur mawjoud wala le
+        String verifyUsername = "SELECT COUNT(1) FROM `user` WHERE `username`='" + username + "';";//requete bech tlawej 3al user mawjoud wala le
 
         try {
             Statement statement = connectDB.createStatement();
@@ -75,40 +75,40 @@ public class LoginController implements ControllerMethods {
             boolean verifyLogin = PasswordHashingUtil.verifyPassword(password, hashedPassword);
             //check if credentials are valid
             if (loginResult.next()) {
-                if (verifyLogin) { //law ken utilisateur mawjoud
+                if (verifyLogin) { //law ken user mawjoud
                     //save user info into an object
-                    String checkUserType = "SELECT CASE WHEN a.idUtlstr IS NOT NULL THEN 'admin' WHEN b.idUtlstr IS NOT NULL THEN 'bibliothecaire' WHEN ad.idUtlstr IS NOT NULL THEN 'adherent' ELSE 'utilisateur' END AS `table` FROM utilisateur u LEFT JOIN admin a ON u.idUtlstr = a.idUtlstr LEFT JOIN bibliothecaire b ON u.idUtlstr = b.idUtlstr LEFT JOIN adherent ad ON u.idUtlstr = ad.idUtlstr WHERE u.nomUtlstr = '" + username + "' AND (a.idUtlstr IS NOT NULL OR b.idUtlstr IS NOT NULL OR ad.idUtlstr IS NOT NULL);";
-                    ResultSet userTypeResult = statement.executeQuery(checkUserType);//ya3ref chnowa naw3 el utilisateur
+                    String checkUserType = "SELECT CASE WHEN a.user_id IS NOT NULL THEN 'admin' WHEN b.user_id IS NOT NULL THEN 'librarians' WHEN ad.user_id IS NOT NULL THEN 'member' ELSE 'user' END AS `table` FROM user u LEFT JOIN admin a ON u.user_id = a.user_id LEFT JOIN librarians b ON u.user_id = b.user_id LEFT JOIN member ad ON u.user_id = ad.user_id WHERE u.username = '" + username + "' AND (a.user_id IS NOT NULL OR b.user_id IS NOT NULL OR ad.user_id IS NOT NULL);";
+                    ResultSet userTypeResult = statement.executeQuery(checkUserType);//ya3ref chnowa naw3 el user
                     if (userTypeResult.next()) {
                         if (userTypeResult.getString(1).equals("admin")) {//law ken admin
                             Admin admin = new Admin();//thez les donnees mel base lel variable
-                            String adminInfo = "SELECT utilisateur.* , admin.departement , admin.email FROM `utilisateur`, `admin`WHERE utilisateur.idUtlstr=admin.idUtlstr AND utilisateur.nomUtlstr = '" + username + "';";
+                            String adminInfo = "SELECT user.* , admin.departement , admin.email FROM `user`, `admin`WHERE user.user_id=admin.user_id AND user.username = '" + username + "';";
                             ResultSet adminInfoResult = statement.executeQuery(adminInfo);
                             if (adminInfoResult.next()) {
                                 admin.createAdminInstance(adminInfoResult);//nasn3ou variable admin fih les info
                                 redirectAdminHome(admin);
                             }
-                        } else if (userTypeResult.getString(1).equals("bibliothecaire")) {
-                            Bibliothecaire bibliothecaire = new Bibliothecaire();
-                            String biblioInfo = "SELECT utilisateur.* , bibliothecaire.dateEmbauche , bibliothecaire.salaire FROM `utilisateur`, `bibliothecaire` WHERE utilisateur.idUtlstr=bibliothecaire.idUtlstr AND utilisateur.nomUtlstr ='" + username + "';";
+                        } else if (userTypeResult.getString(1).equals("librarians")) {
+                            Librarian librarian = new Librarian();
+                            String biblioInfo = "SELECT user.* , librarians.dateEmbauche , librarians.salary FROM `user`, `librarians` WHERE user.user_id=librarians.user_id AND user.username ='" + username + "';";
                             ResultSet biblioInfoResult = statement.executeQuery(biblioInfo);
                             if (biblioInfoResult.next()) {
-                                bibliothecaire.createBibliothecaireInstance(biblioInfoResult);
-                                redirectBibliothecaireHome(bibliothecaire);
+                                librarian.createLibrarianInstance(biblioInfoResult);
+                                redirectLibrariansHome(librarian);
                             }
-                        } else if (userTypeResult.getString(1).equals("adherent")) {
-                            Adherent adherent = new Adherent();
-                            String adherentInfo = "SELECT utilisateur.* , adherent.cin , adherent.dateInscription FROM `utilisateur`, `adherent` WHERE utilisateur.idUtlstr=adherent.idUtlstr AND utilisateur.nomUtlstr = '" + username + "';";
-                            ResultSet adherentInfoResult = statement.executeQuery(adherentInfo);
-                            if (adherentInfoResult.next()) {
-                                adherent.createAdherentInstance(adherentInfoResult);
-                                redirectAdherentHome(adherent);
+                        } else if (userTypeResult.getString(1).equals("member")) {
+                            Member member = new Member();
+                            String memberInfo = "SELECT user.* , member.cin , member.registration_date FROM `user`, `member` WHERE user.user_id=member.user_id AND user.username = '" + username + "';";
+                            ResultSet memberInfoResult = statement.executeQuery(memberInfo);
+                            if (memberInfoResult.next()) {
+                                member.createMemberInstance(memberInfoResult);
+                                redirectAdherentHome(member);
                             }
                         } else {
                             loginMessageLabel.setText("Connexion invalide. Veuillez réessayer!");
                         }
                     }
-                    Utilisateur user = new Utilisateur();
+                    User user = new User();
                 } else {
                     loginMessageLabel.setText("Connexion invalide. Veuillez réessayer!");
                 }
@@ -127,7 +127,7 @@ public class LoginController implements ControllerMethods {
 
         AdminHomeController adminHomeController = fxmlLoader.getController();
         adminHomeController.admin=admin;
-        adminHomeController.displayName(admin.getNom(), admin.getPrenom());
+        adminHomeController.displayName(admin.getLastName(), admin.getFirstName());
 
         centerScene(stage, scene);
 
@@ -136,15 +136,15 @@ public class LoginController implements ControllerMethods {
     }
 
     //thezek lel page biblio
-    public void redirectBibliothecaireHome(Bibliothecaire bibliothecaire) throws IOException {
+    public void redirectLibrariansHome(Librarian librarian) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scenes/biblioHome.fxml"));
 
         stage = (Stage) loginButton.getScene().getWindow();
         scene = new Scene(fxmlLoader.load(), 800, 500);
 
-        BiblioHomeController biblioHomeController = fxmlLoader.getController();
-        biblioHomeController.bibliothecaire=bibliothecaire;
-        biblioHomeController.displayName(bibliothecaire.getNom(), bibliothecaire.getPrenom());
+        LibrarianHomeController librarianHomeController = fxmlLoader.getController();
+        librarianHomeController.librarian = librarian;
+        librarianHomeController.displayName(librarian.getLastName(), librarian.getFirstName());
 
         centerScene(stage, scene);
 
@@ -152,16 +152,16 @@ public class LoginController implements ControllerMethods {
         stage.show();
     }
 
-    //thezek lel page adherent
-    public void redirectAdherentHome(Adherent adherent) throws IOException {
+    //thezek lel page member
+    public void redirectAdherentHome(Member member) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/scenes/adherentHome.fxml"));
 
         stage = (Stage) loginButton.getScene().getWindow();
         scene = new Scene(fxmlLoader.load(), 800, 500);
 
-        AdherentHomeController adherentHomeController = fxmlLoader.getController();
-        adherentHomeController.adherent = adherent;
-        adherentHomeController.displayName(adherent.getNom(), adherent.getPrenom());
+        MemberHomeController memberHomeController = fxmlLoader.getController();
+        memberHomeController.member = member;
+        memberHomeController.displayName(member.getLastName(), member.getFirstName());
 
         centerScene(stage, scene);
 
@@ -170,7 +170,7 @@ public class LoginController implements ControllerMethods {
     }
 
     private String getHashedPasswordByUsername(String username, Connection connection) {
-        String SELECT_HASHED_PASSWORD = "SELECT motDePasse FROM `utilisateur` WHERE nomUtlstr = ?";
+        String SELECT_HASHED_PASSWORD = "SELECT motDePasse FROM `user` WHERE username = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HASHED_PASSWORD)) {
 
             preparedStatement.setString(1, username); // Bind the username to the query

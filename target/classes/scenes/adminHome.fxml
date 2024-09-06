@@ -53,7 +53,7 @@
                   <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" />
                </rowConstraints>
                <children>
-                  <Label prefWidth="184.0" text="Rechercher un adherent :" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+                  <Label prefWidth="184.0" text="Rechercher un member :" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
                   <TextField fx:id="adherentSearchField" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                   <Button onAction="#adherentSearchForRows" text="Recherche" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                   <TableView fx:id="adherentTableView" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="2">
@@ -65,7 +65,7 @@
                   </TableView>
                   <HBox alignment="CENTER" prefWidth="315.0" spacing="10" GridPane.columnSpan="3" GridPane.rowIndex="3">
                      <Button onAction="#adherentEditSelectedRow" text="Modifier Adherent" />
-                     <Button onAction="#adherentDeleteSelectedRow" text="Supprimer adherent" />
+                     <Button onAction="#adherentDeleteSelectedRow" text="Supprimer member" />
                   </HBox>
                   <Button mnemonicParsing="false" onAction="#adherentAdd" text="Ajouter Adherent" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                   <Button mnemonicParsing="false" onAction="#refreshAdherentTable" text="Actualiser" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
@@ -101,7 +101,7 @@
                   <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" />
                </rowConstraints>
                <children>
-                  <Label prefWidth="184.0" text="Rechercher un bibliothecaire:" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+                  <Label prefWidth="184.0" text="Rechercher un librarian:" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
                   <TextField fx:id="biblioSearchField" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                   <Button onAction="#biblioSearchForRows" text="Recherche" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                   <TableView fx:id="biblioTableView" GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.rowIndex="2">
