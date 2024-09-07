@@ -3,7 +3,7 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 --
--- Database: `library-project`
+-- Database: `library_project`
 --
 
 -- --------------------------------------------------------
@@ -16,7 +16,7 @@ CREATE TABLE `members` (
                            `user_id` int(4) UNSIGNED NOT NULL COMMENT 'User ID',
                            `id_number` int(8) NOT NULL COMMENT 'ID card number',
                            `registration_date` date DEFAULT NULL COMMENT 'Registration date'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `members`
@@ -35,7 +35,7 @@ CREATE TABLE `admins` (
                           `user_id` int(4) UNSIGNED NOT NULL COMMENT 'User ID',
                           `department` varchar(50) DEFAULT NULL COMMENT 'Department',
                           `email` varchar(255) DEFAULT NULL COMMENT 'Email'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `admins`
@@ -54,7 +54,7 @@ CREATE TABLE `librarians` (
                               `user_id` int(4) UNSIGNED NOT NULL COMMENT 'User ID',
                               `hire_date` date DEFAULT NULL COMMENT 'Hire date',
                               `salary` float DEFAULT NULL COMMENT 'Salary'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `librarians`
@@ -74,7 +74,7 @@ CREATE TABLE `documents` (
                              `reference` varchar(5) NOT NULL COMMENT 'Document reference',
                              `title` varchar(255) NOT NULL COMMENT 'Document title',
                              `author` varchar(255) DEFAULT NULL COMMENT 'Document author'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `documents`
@@ -99,7 +99,7 @@ CREATE TABLE `loans` (
                          `librarian_id` int(4) UNSIGNED NOT NULL COMMENT 'Librarian ID',
                          `document_id` int(4) UNSIGNED NOT NULL COMMENT 'Document ID',
                          `is_returned` tinyint(1) NOT NULL COMMENT 'Is the document returned'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `loans`
@@ -123,7 +123,7 @@ CREATE TABLE `reservations` (
                                 `member_id` int(4) UNSIGNED NOT NULL COMMENT 'Member ID',
                                 `reservation_date` date NOT NULL COMMENT 'Reservation date',
                                 `is_validated` tinyint(1) NOT NULL COMMENT 'Is it validated by librarian'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `reservations`
@@ -152,18 +152,20 @@ CREATE TABLE `users` (
                          `first_name` varchar(50) NOT NULL COMMENT 'First name',
                          `address` varchar(255) DEFAULT NULL COMMENT 'Address',
                          `phone` int(8) UNSIGNED NOT NULL COMMENT 'Phone number'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+);
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `last_name`, `first_name`, `address`, `phone`) VALUES
-                                                                                                           (1, 'ibrahimdev', 'Test1234', 'Ibrahim', 'Houssem', 'Raoued', 54385290),
-                                                                                                           (2, 'Hlel', 'mdp1234', 'Hlel', 'Mohammed Aziz', 'Ghazela', 52789456),
+                                                                                                           (1, 'Ibrahimdev', 'Test1234', 'Ibrahim', 'Houssem', 'Raoued', 54385290),
+                                                                                                           (2, 'Hlel', 'mdp1234', 'Doe', 'Hle', 'Ghazela', 52789456),
                                                                                                            (3, 'Nour', 'mdp0000', 'Testou', 'Test', 'Tunis', 24567891),
                                                                                                            (4, 'Moetez', 'Test0000', 'Smith', 'John', 'Nabeul', 98456123),
                                                                                                            (6, 'test', 'Test1234', 'Hlfvfel', 'Mohame', 'Raoued', 54385290),
+                                                                                                           (8, 'ghfgh', 'jgkgkkhk', 'gbn', 'rtghjk', 'ghjgjf f', 36985741);
+
 --
 -- Indexes for dumped tables
 --

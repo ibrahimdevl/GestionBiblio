@@ -1,7 +1,6 @@
 package databaseConnection;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
@@ -9,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
+import org.apache.ibatis.jdbc.ScriptRunner;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -59,6 +59,15 @@ public class DatabaseConnection {
         }
 
         stmt.close();
+        conn.close();
+    }
+    public static void runScript1() throws Exception {
+        Connection conn = getConnection();
+        ScriptRunner sr = new ScriptRunner(conn);
+        //Creating a reader object
+        Reader reader = new BufferedReader(new FileReader("src/main/resources/libraryproject.sql"));
+        //Running the script
+        sr.runScript(reader);
         conn.close();
     }
 }

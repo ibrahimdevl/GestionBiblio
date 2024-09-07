@@ -4,6 +4,7 @@ module GestionBiblio {
     requires javafx.graphics;
     requires java.sql;
     requires io.github.cdimascio.dotenv.java;
+    requires org.mybatis;
 
     opens application;
     opens controllers;

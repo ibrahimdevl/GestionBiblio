@@ -170,7 +170,7 @@ public class LoginController implements ControllerMethods {
     }
 
     private String getHashedPasswordByUsername(String username, Connection connection) {
-        String SELECT_HASHED_PASSWORD = "SELECT motDePasse FROM `user` WHERE username = ?";
+        String SELECT_HASHED_PASSWORD = "SELECT password FROM `user` WHERE username = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_HASHED_PASSWORD)) {
 
             preparedStatement.setString(1, username); // Bind the username to the query

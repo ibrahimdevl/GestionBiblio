@@ -33,4 +33,6 @@ env.properties
 .env
 env.properties
 .env
-/target
+# Ignore Maven target directory
+/target/
+**/target/
